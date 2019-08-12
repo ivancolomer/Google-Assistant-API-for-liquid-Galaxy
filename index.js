@@ -10,6 +10,8 @@ const port = process.env.PORT || 8081
 const dgram = require('dgram')
 const axios = require('axios')
 
+const ANDROID_APP = "http://192.168.86.250:8080/"
+
 directions = {'left': [0,-1], 'right': [0,1] ,'up': [1,1] ,'down': [1,-1]}
 
 function moveSpacenavigator(direction){
@@ -155,6 +157,80 @@ app.intent('Movements',function(conv){
   conv.ask(response)
 })
 
+app.intent('Choose player name', function(conv){
+  return axios.get(ANDROID_APP + "player/")
+  .then(function(res){
+    var data = res.data.data
+    if(data.status == "IS_MULTIPLAYER_GAME") {
+      conv.ask(new SimpleResponse({
+        speech: "What's your name?",
+        text: "What's your name?"
+      }))
+    } else {
+      conv.ask(new SimpleResponse({
+        speech: "You must choose a trivia game first",
+        text: "You must choose a trivia game first"
+      }))
+    }
+  })
+  .catch(function(err){
+    console.log(err)
+  })
+}
+
+app.intent('Choose player name - first_name', function(conv){
+  var lastnames = ""
+  if("last-name" in conv.parameters) {
+    conv.parameters["last-name"].forEach(function(element) {
+      lastnames = lastnames + "%20" + element
+    });
+  }
+  return axios.get(ANDROID_APP + "player/" + conv.parameters["given-name"] + lastnames)
+  .then(function(res){
+    var data = res.data.data
+    if(data.status == "IS_MULTIPLAYER_GAME") {
+      conv.ask(new SimpleResponse({
+        speech: "What's your name?",
+        text: "What's your name?"
+      }))
+    } else {
+      conv.ask(new SimpleResponse({
+        speech: "You must choose a trivia game first",
+        text: "You must choose a trivia game first"
+      }))
+    }
+  })
+  .catch(function(err){
+    console.log(err)
+  })
+}
+
+app.intent('Play game', function(conv){
+  return axios.get(ANDROID_APP + "play/game/" + conv.parameters["any"])
+  .then(function(res){
+    var data = res.data.data
+    if(data.status == "IS_MULTIPLAYER_GAME") {
+      conv.ask(new SimpleResponse({
+        speech: "What's your name?",
+        text: "What's your name?"
+      }))
+    } else if(data.status == "OK"){
+      conv.ask(new SimpleResponse({
+        speech: "Good luck and have fun",
+        text: "Good luck and have fun"
+      }))
+    }
+    else if(data.status == "OK"){
+      conv.ask(new SimpleResponse({
+        speech: "Oops! Something went wrong",
+        text: "Oops! Something went wrong"
+      }))
+    }
+  })
+  .catch(function(err){
+    console.log(err)
+  })
+}
 
 expressApp.post('/assistant', app)
 

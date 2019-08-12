@@ -221,11 +221,13 @@ app.intent('Choose player name - first_name', function(conv){
 })
 
 app.intent('Play game', function(conv){
-  return axios.get(ANDROID_APP + "play/game/" + conv.parameters["any"])
+  game_number = ""
+  if("number-integer" in conv.parameters && conv.parameters["number-integer"].toString().length > 0) {
+    game_number = conv.parameters["number-integer"].toString()
+  }
+  return axios.get(ANDROID_APP + "play/game/" + conv.parameters["any"] + "%20" + game_number)
   .then(function(res){
     var data = res.data
-    console.log(res.data)
-    console.log(ANDROID_APP + "play/game/" + conv.parameters["any"])
     if(data.status == "IS_MULTIPLAYER_GAME") {
       response = new SimpleResponse({
         speech: "What's your name?",

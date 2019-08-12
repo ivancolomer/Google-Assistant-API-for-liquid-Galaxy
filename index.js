@@ -186,13 +186,26 @@ app.intent('Choose player name - first_name', function(conv){
       lastnames = lastnames + "%20" + element
     });
   }
-  return axios.get(ANDROID_APP + "player/" + conv.parameters["given-name"] + lastnames)
+
+  console.log(conv.parameters)
+  var user_name = ""
+  if("given-name" in conv.parameters && conv.parameters["given-name"] && conv.parameters["given-name"].length > 0) {
+    user_name = conv.parameters["given-name"]
+    console.log("given-name: " + user_name)
+  } else if("person" in conv.parameters && conv.parameters["person"] && conv.parameters["person"]["name"].length > 0) {
+    user_name = conv.parameters["person"]["name"]
+    console.log("person: " + user_name)
+  } else if("person2" in conv.parameters && conv.parameters["person2"] && conv.parameters["person2"].length > 0) {
+    user_name = conv.parameters["person2"]
+    console.log("person2: " + user_name)
+  }
+  return axios.get(ANDROID_APP + "player/" + user_name + lastnames)
   .then(function(res){
     var data = res.data
     if(data.status == "IS_MULTIPLAYER_GAME") {
       response = new SimpleResponse({
         speech: "Ok, what's the next player name?",
-        text: "Ok, what's the next player name?
+        text: "Ok, what's the next player name?"
       })
     } else {
       response = new SimpleResponse({

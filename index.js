@@ -160,18 +160,19 @@ app.intent('Movements',function(conv){
 app.intent('Choose player name', function(conv){
   return axios.get(ANDROID_APP + "player/")
   .then(function(res){
-    var data = res.data.data
+    var data = res.data
     if(data.status == "IS_MULTIPLAYER_GAME") {
-      conv.ask(new SimpleResponse({
+      response = new SimpleResponse({
         speech: "What's your name?",
         text: "What's your name?"
-      }))
+      })
     } else {
-      conv.ask(new SimpleResponse({
+      response = new SimpleResponse({
         speech: "You must choose a trivia game first",
         text: "You must choose a trivia game first"
-      }))
+      })
     }
+    conv.ask(response)
   })
   .catch(function(err){
     console.log(err)
@@ -187,18 +188,19 @@ app.intent('Choose player name - first_name', function(conv){
   }
   return axios.get(ANDROID_APP + "player/" + conv.parameters["given-name"] + lastnames)
   .then(function(res){
-    var data = res.data.data
+    var data = res.data
     if(data.status == "IS_MULTIPLAYER_GAME") {
-      conv.ask(new SimpleResponse({
-        speech: "What's your name?",
-        text: "What's your name?"
-      }))
+      response = new SimpleResponse({
+        speech: "Ok, what's the next player name?",
+        text: "Ok, what's the next player name?
+      })
     } else {
-      conv.ask(new SimpleResponse({
+      response = new SimpleResponse({
         speech: "You must choose a trivia game first",
         text: "You must choose a trivia game first"
-      }))
+      })
     }
+    conv.ask(response)
   })
   .catch(function(err){
     console.log(err)
@@ -208,24 +210,27 @@ app.intent('Choose player name - first_name', function(conv){
 app.intent('Play game', function(conv){
   return axios.get(ANDROID_APP + "play/game/" + conv.parameters["any"])
   .then(function(res){
-    var data = res.data.data
+    var data = res.data
+    console.log(res.data)
+    console.log(ANDROID_APP + "play/game/" + conv.parameters["any"])
     if(data.status == "IS_MULTIPLAYER_GAME") {
-      conv.ask(new SimpleResponse({
+      response = new SimpleResponse({
         speech: "What's your name?",
         text: "What's your name?"
-      }))
+      })
     } else if(data.status == "OK"){
-      conv.ask(new SimpleResponse({
+      response = new SimpleResponse({
         speech: "Good luck and have fun",
         text: "Good luck and have fun"
-      }))
+      })
     }
-    else if(data.status == "OK"){
-      conv.ask(new SimpleResponse({
+    else {
+      response = new SimpleResponse({
         speech: "Oops! Something went wrong",
         text: "Oops! Something went wrong"
-      }))
+      })
     }
+    conv.ask(response)
   })
   .catch(function(err){
     console.log(err)

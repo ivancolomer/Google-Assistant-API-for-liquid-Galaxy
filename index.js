@@ -176,7 +176,7 @@ app.intent('Choose player name', function(conv){
   .catch(function(err){
     console.log(err)
   })
-}
+})
 
 app.intent('Choose player name - first_name', function(conv){
   var lastnames = ""
@@ -203,7 +203,7 @@ app.intent('Choose player name - first_name', function(conv){
   .catch(function(err){
     console.log(err)
   })
-}
+})
 
 app.intent('Play game', function(conv){
   return axios.get(ANDROID_APP + "play/game/" + conv.parameters["any"])
@@ -230,7 +230,7 @@ app.intent('Play game', function(conv){
   .catch(function(err){
     console.log(err)
   })
-}
+})
 
 expressApp.post('/assistant', app)
 

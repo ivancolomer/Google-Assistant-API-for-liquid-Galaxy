@@ -239,6 +239,12 @@ app.intent('Play game', function(conv){
         text: "Good luck and have fun"
       })
     }
+    else if(data.status == "GAME_NOT_FOUND"){
+      response = new SimpleResponse({
+        speech: "The game was not found",
+        text: "The game was not found"
+      })
+    }
     else {
       response = new SimpleResponse({
         speech: "Oops! Something went wrong",

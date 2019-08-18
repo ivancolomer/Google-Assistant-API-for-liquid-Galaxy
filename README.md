@@ -1,8 +1,6 @@
 # Google Assistant API for Liquid-Galaxy
 
-![npm](https://img.shields.io/npm/dm/google-assistant-api-for-liquid-galaxy.svg)
-![NPM](https://img.shields.io/npm/l/google-assistant-api-for-liquid-galaxy.svg)
-![GitHub stars](https://img.shields.io/github/stars/xemyst/Google-Assistant-API-for-liquid-Galaxy.svg?style=social)
+![GitHub stars](https://img.shields.io/github/stars/ivancolomer/Google-Assistant-API-for-liquid-Galaxy.svg?style=social)
 
 ----
 
@@ -10,24 +8,26 @@
 
 
 install:
-> npm i google-assistant-api-for-liquid-galaxy
-
-Dependences:
-1. DialogFlow
-1. NodeJS
+```bash
+cd ~
+sudo apt update
+sudo apt-get install -y curl git jq wget
+curl -sL https://deb.nodesource.com/setup_10.x | sudo -E bash -
+git clone https://github.com/ivancolomer/Google-Assistant-API-for-liquid-Galaxy/
+wget "https://bin.equinox.io/c/4VmDzA7iaHb/ngrok-stable-linux-amd64.zip"
+unzip ngrok-stable-linux-amd64.zip
+```
 
 
 ## Use of ngrok for the webhook
-
-
 ```bash
-
-
-sudo apt install -y jq wget
-
-wget "https://bin.equinox.io/c/4VmDzA7iaHb/ngrok-stable-linux-amd64.zip"
-unzip ngrok-stable-linux-amd64.zip
 ./ngrok authtoken $AUTH_TOKEN
 nohup ./ngrok http 8080 &
 curl -s http://localhost:4040/api/tunnels | jq -r '.tunnels[0].public_url'
+```
+Where $AUTH_TOKEN is the token from your ngrok account. The ip address that is printed should be put to your DialogFlow project (in fulfillment).
+
+## Run API
+```bash
+nohup node ~/Google-Assistant-API-for-liquid-Galaxy/index.js &
 ```
